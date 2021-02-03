@@ -66,6 +66,7 @@ describe('MoviesService', () => {
       }
     });
   });
+
   describe('create', () => {
     it('should create a movie', () => {
       const beforeCreateCount = service.getAll().length;
@@ -76,6 +77,26 @@ describe('MoviesService', () => {
       });
       const afterCreateCount = service.getAll().length;
       expect(afterCreateCount).toBeGreaterThan(beforeCreateCount);
+    });
+  });
+
+  describe('update', () => {
+    it('should update a movie', () => {
+      service.create({
+        title: 'Test Movie',
+        genres: ['test'],
+        year: 2000,
+      });
+      service.update(1, { title: 'update title' });
+      const movie = service.getOne(1);
+      expect(movie.title).toEqual('update title');
+    });
+    it('should return a 404', () => {
+      try {
+        service.update(999, {});
+      } catch (e) {
+        expect(e).toBeInstanceOf(NotFoundException);
+      }
     });
   });
 });
